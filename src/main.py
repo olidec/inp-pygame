@@ -60,8 +60,13 @@ class PlayerSprite(BaseSprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.rect.x = self.rect.x - self.speed
+            if self.rect.x < - Config.TILE_SIZE:
+                self.rect.x = Config.WINDOW_WIDTH + Config.TILE_SIZE
+
         if keys[pygame.K_RIGHT]:
             self.rect.x = self.rect.x + self.speed
+            if self.rect.x > Config.WINDOW_WIDTH + Config.TILE_SIZE:
+                self.rect.x = - Config.TILE_SIZE
         if keys[pygame.K_SPACE]:
             self.jump()
 
@@ -76,7 +81,7 @@ class PlayerSprite(BaseSprite):
 class GroundSprite(BaseSprite):
     def __init__(self, game, x, y):
         super().__init__(game, x, y, groups=game.ground, layer=0)
-        self.image.fill(Config.GREEN)
+        self.image.fill(Config.BLUE)
 
 
 class Config:
@@ -86,6 +91,7 @@ class Config:
     RED = (255, 0, 0)
     GREEN = (0, 255, 0)
     GREY = (128, 128, 128)
+    BLUE = (0, 0, 255)
     FPS = 30
     TILE_SIZE = 32
     MAX_GRAVITY = -3
@@ -107,7 +113,7 @@ class Game:
         self.players = pygame.sprite.LayeredUpdates()
 
         self.player = PlayerSprite(self, 10, 10)
-        for i in range(20):
+        for i in range(-1,21):
             GroundSprite(self, i, 12)
         for i in range(5, 10):
             GroundSprite(self, i, 9)
